@@ -17,11 +17,13 @@ public class DrawingCat {
 	
 	public static void main(String[] args) {
 	DrawingCat dc = new DrawingCat();
-	}
+	
+}
 	
 	
 	void setup(){
 		f.add(cgp);
+		
 		f.setVisible(true);
 		 f.setSize(WIDTH, HEIGHT);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
