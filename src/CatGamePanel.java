@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,102 +13,130 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-
 public class CatGamePanel extends JPanel implements ActionListener, KeyListener {
 	final int MENU_STATE = 0;
 	final int EXPLAIN1_STATE = 1;
 	final int EXPLAIN2_STATE = 2;
-	final int GAME_STATE = 3;
-	final int END_STATE = 4;
+	final int DRAWINSTRUCTIONS_STATE = 3;
+	final int GAME_STATE = 4;
+	final int END_STATE = 5;
 	int currentState = MENU_STATE;
 	public static BufferedImage CatImg;
 	public static BufferedImage StartcatImg;
 	public static BufferedImage Explain2Img;
+	public static BufferedImage DrawInstructionsImg;
+	public static BufferedImage GameBackgroundImg;
 	Timer t;
+	Font youlost;
+Font score;
 	// CatGameObject cgo;
 
 	public void paintComponent(Graphics g) {
 
-		if(currentState == MENU_STATE){
+		if (currentState == MENU_STATE) {
 			drawMenuState(g);
-		}
-		else if(currentState == EXPLAIN1_STATE){
+		} else if (currentState == EXPLAIN1_STATE) {
 			drawExplainState1(g);
-		}else if(currentState == EXPLAIN2_STATE){
+		} else if (currentState == EXPLAIN2_STATE) {
 			drawExplainState2(g);
-		}else if(currentState == GAME_STATE){
+		} else if (currentState == DRAWINSTRUCTIONS_STATE) {
+			drawInstructionsState(g);
+		} else if (currentState == GAME_STATE) {
 			drawGameState(g);
-		}else if(currentState == END_STATE){
+		} else if (currentState == END_STATE) {
 			drawEndState(g);
 		}
 
-
 	}
-CatGamePanel() {
+
+	CatGamePanel() {
 
 		t = new Timer(1000 / 60, this);
-		try{
-			CatImg = ImageIO.read(this.getClass().getResourceAsStream("cat.jpeg"));
+		try {
+			CatImg = ImageIO.read(this.getClass().getResourceAsStream("cat.jpg"));
 			StartcatImg = ImageIO.read(this.getClass().getResourceAsStream("startcat.jpg"));
 			Explain2Img = ImageIO.read(this.getClass().getResourceAsStream("Explain2.jpg"));
-		} catch(IOException e){
+			DrawInstructionsImg = ImageIO.read(this.getClass().getResourceAsStream("drawInstructions.png"));
+			GameBackgroundImg = ImageIO.read(this.getClass().getResourceAsStream("game background.png"));
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// cgo = new CatGameObject();
+		youlost = new Font("Ariel", Font.BOLD, 100);
+		score = new Font ("Ariel", Font.PLAIN, 75);
+	}
+
+	void updateMenuState() {
 
 	}
-	void updateMenuState(){
-		
+
+	void updateExplainState1() {
+
 	}
-	void updateExplainState1(){
-		
+
+	void updateExplainState2() {
+
 	}
-	void updateExplainState2(){
-		
+
+	void updateDrawInstructionsState() {
+
 	}
-	void updateGameState(){
-		
+
+	void updateGameState() {
+
 	}
-	void updateEndState(){
-		
+
+	void updateEndState() {
+
 	}
-	
-	
-	void drawMenuState(Graphics g){
+
+	void drawMenuState(Graphics g) {
 		g.drawImage(StartcatImg, 0, 0, 800, 500, null);
 	}
-	void drawExplainState1(Graphics g){
-			g.drawImage(CatImg, 0, 0, 800, 500, null);
+
+	void drawExplainState1(Graphics g) {
+		g.drawImage(CatImg, 0, 0, 800, 500, null);
 	}
-	void drawExplainState2(Graphics g){
+
+	void drawExplainState2(Graphics g) {
 		g.drawImage(Explain2Img, 0, 0, 800, 500, null);
 	}
-	void drawGameState(Graphics g){
-	
+
+	void drawInstructionsState(Graphics g) {
+		g.drawImage(DrawInstructionsImg, 0, 0, 800, 500, null);
 	}
-	void drawEndState(Graphics g){
+
+	void drawGameState(Graphics g) {
+g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
+	}
+
+	void drawEndState(Graphics g) {
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, 800, 500);
+		g.setColor(Color.BLACK);
+		g.setFont(youlost);
+		g.drawString("YOU LOST", 133, 100);
+		g.setColor(Color.CYAN);
+		g.setFont(score);
+		g.drawString("Score = ", 150, 200);
 	}
-	
-	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		repaint();
-		if(currentState == MENU_STATE){
+		if (currentState == MENU_STATE) {
 			updateMenuState();
-		}else if(currentState == EXPLAIN1_STATE){
+		} else if (currentState == EXPLAIN1_STATE) {
 			updateExplainState1();
-			}
-	else if(currentState == EXPLAIN2_STATE){
-		updateExplainState2();
-	}
-		else if(currentState == GAME_STATE){
+		} else if (currentState == EXPLAIN2_STATE) {
+			updateExplainState2();
+		} else if (currentState == DRAWINSTRUCTIONS_STATE) {
+			updateDrawInstructionsState();
+		} else if (currentState == GAME_STATE) {
 			updateGameState();
-		}else if(currentState == END_STATE){
+		} else if (currentState == END_STATE) {
 			updateEndState();
 		}
 
@@ -134,7 +163,6 @@ CatGamePanel() {
 			}
 		}
 
-
 	}
 
 	@Override
@@ -144,3 +172,4 @@ CatGamePanel() {
 	}
 
 }
+  
