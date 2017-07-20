@@ -29,6 +29,7 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	Timer t;
 	Font youlost;
 Font score;
+TheCat cat = new TheCat (100, 200, 40, 70); 
 	// CatGameObject cgo;
 
 	public void paintComponent(Graphics g) {
@@ -84,7 +85,7 @@ Font score;
 	}
 
 	void updateGameState() {
-
+cat.update();
 	}
 
 	void updateEndState() {
@@ -109,6 +110,7 @@ Font score;
 
 	void drawGameState(Graphics g) {
 g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
+cat.draw(g);
 	}
 
 	void drawEndState(Graphics g) {
@@ -162,6 +164,15 @@ g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
 				currentState = MENU_STATE;
 			}
 		}
+	
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
+				cat.up = true;
+				 System.out.println("up");
+			}
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				cat.down = true;
+			}
+		
 
 	}
 
@@ -169,6 +180,14 @@ g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("This is keyReleased");
+		
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			cat.up = false;
+			 System.out.println("up");
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			cat.down = false;
+		}
 	}
 
 }
