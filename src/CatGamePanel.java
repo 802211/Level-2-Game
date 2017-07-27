@@ -17,19 +17,21 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	final int MENU_STATE = 0;
 	final int EXPLAIN1_STATE = 1;
 	final int EXPLAIN2_STATE = 2;
-	final int DRAWINSTRUCTIONS_STATE = 3;
-	final int GAME_STATE = 4;
-	final int END_STATE = 5;
+	//final int DRAWINSTRUCTIONS_STATE = 3;
+	final int GAME_STATE = 3;
+	final int END_STATE = 4;
 	int currentState = MENU_STATE;
 	public static BufferedImage CatImg;
 	public static BufferedImage StartcatImg;
 	public static BufferedImage Explain2Img;
-	public static BufferedImage DrawInstructionsImg;
+//	public static BufferedImage DrawInstructionsImg;
 	public static BufferedImage GameBackgroundImg;
+	public static BufferedImage OnlyCatImg;
 	Timer t;
 	Font youlost;
 Font score;
-TheCat cat = new TheCat (100, 200, 40, 70); 
+ObjectManager om = new ObjectManager();
+TheCat cat = new TheCat (100, 150, 80, 110); 
 	// CatGameObject cgo;
 
 	public void paintComponent(Graphics g) {
@@ -40,9 +42,11 @@ TheCat cat = new TheCat (100, 200, 40, 70);
 			drawExplainState1(g);
 		} else if (currentState == EXPLAIN2_STATE) {
 			drawExplainState2(g);
-		} else if (currentState == DRAWINSTRUCTIONS_STATE) {
+		} 
+		/*else if (currentState == DRAWINSTRUCTIONS_STATE) {
 			drawInstructionsState(g);
-		} else if (currentState == GAME_STATE) {
+		} */
+		else if (currentState == GAME_STATE) {
 			drawGameState(g);
 		} else if (currentState == END_STATE) {
 			drawEndState(g);
@@ -57,8 +61,10 @@ TheCat cat = new TheCat (100, 200, 40, 70);
 			CatImg = ImageIO.read(this.getClass().getResourceAsStream("cat.jpg"));
 			StartcatImg = ImageIO.read(this.getClass().getResourceAsStream("startcat.jpg"));
 			Explain2Img = ImageIO.read(this.getClass().getResourceAsStream("Explain2.jpg"));
-			DrawInstructionsImg = ImageIO.read(this.getClass().getResourceAsStream("drawInstructions.png"));
+		//	DrawInstructionsImg = ImageIO.read(this.getClass().getResourceAsStream("drawInstructions.png"));
 			GameBackgroundImg = ImageIO.read(this.getClass().getResourceAsStream("game background.png"));
+			OnlyCatImg = ImageIO.read(this.getClass().getResourceAsStream("OnlyCat.Png"));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -66,6 +72,7 @@ TheCat cat = new TheCat (100, 200, 40, 70);
 		// cgo = new CatGameObject();
 		youlost = new Font("Ariel", Font.BOLD, 100);
 		score = new Font ("Ariel", Font.PLAIN, 75);
+		om.addObject(cat);
 	}
 
 	void updateMenuState() {
@@ -80,12 +87,13 @@ TheCat cat = new TheCat (100, 200, 40, 70);
 
 	}
 
-	void updateDrawInstructionsState() {
+	//void updateDrawInstructionsState() {
 
-	}
+	//}
 
 	void updateGameState() {
 cat.update();
+om.update();
 	}
 
 	void updateEndState() {
@@ -104,13 +112,15 @@ cat.update();
 		g.drawImage(Explain2Img, 0, 0, 800, 500, null);
 	}
 
-	void drawInstructionsState(Graphics g) {
+	/*void drawInstructionsState(Graphics g) {
 		g.drawImage(DrawInstructionsImg, 0, 0, 800, 500, null);
-	}
+	}*/
 
 	void drawGameState(Graphics g) {
 g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
-cat.draw(g);
+om.draw(g);
+//g.drawImage(OnlyCatImg, 100, 150, 80, 110, null);
+
 	}
 
 	void drawEndState(Graphics g) {
@@ -134,9 +144,11 @@ cat.draw(g);
 			updateExplainState1();
 		} else if (currentState == EXPLAIN2_STATE) {
 			updateExplainState2();
-		} else if (currentState == DRAWINSTRUCTIONS_STATE) {
+		} 
+		/*else if (currentState == DRAWINSTRUCTIONS_STATE) {
 			updateDrawInstructionsState();
-		} else if (currentState == GAME_STATE) {
+		} */ 
+		else if (currentState == GAME_STATE) {
 			updateGameState();
 		} else if (currentState == END_STATE) {
 			updateEndState();
@@ -172,6 +184,13 @@ cat.draw(g);
 			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 				cat.down = true;
 			}
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				cat.left = true;
+				System.out.println("up");
+			}
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				cat.right = true;
+			}
 		
 
 	}
@@ -187,6 +206,13 @@ cat.draw(g);
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			cat.down = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			cat.left = false;
+			System.out.println("up");
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			cat.right = false;
 		}
 	}
 

@@ -1,6 +1,7 @@
 import java.awt.Graphics;
 
 public class CatGameObject {
+	boolean isAlive = true;
 	int x;
 	int y;
 	int width;
