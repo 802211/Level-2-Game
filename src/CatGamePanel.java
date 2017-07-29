@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.IOError;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -17,21 +16,24 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	final int MENU_STATE = 0;
 	final int EXPLAIN1_STATE = 1;
 	final int EXPLAIN2_STATE = 2;
-	//final int DRAWINSTRUCTIONS_STATE = 3;
+	// final int DRAWINSTRUCTIONS_STATE = 3;
 	final int GAME_STATE = 3;
 	final int END_STATE = 4;
 	int currentState = MENU_STATE;
 	public static BufferedImage CatImg;
 	public static BufferedImage StartcatImg;
 	public static BufferedImage Explain2Img;
-//	public static BufferedImage DrawInstructionsImg;
+	// public static BufferedImage DrawInstructionsImg;
 	public static BufferedImage GameBackgroundImg;
 	public static BufferedImage OnlyCatImg;
+	public static BufferedImage StarImg;
+	public static BufferedImage GhostImg;
 	Timer t;
 	Font youlost;
-Font score;
-ObjectManager om = new ObjectManager();
-TheCat cat = new TheCat (100, 150, 80, 110); 
+	Font score;
+	ObjectManager om = new ObjectManager();
+	TheCat cat = new TheCat(100, 150, 80, 110);
+	SpellFire sf;
 	// CatGameObject cgo;
 
 	public void paintComponent(Graphics g) {
@@ -42,10 +44,11 @@ TheCat cat = new TheCat (100, 150, 80, 110);
 			drawExplainState1(g);
 		} else if (currentState == EXPLAIN2_STATE) {
 			drawExplainState2(g);
-		} 
-		/*else if (currentState == DRAWINSTRUCTIONS_STATE) {
-			drawInstructionsState(g);
-		} */
+		}
+		/*
+		 * else if (currentState == DRAWINSTRUCTIONS_STATE) {
+		 * drawInstructionsState(g); }
+		 */
 		else if (currentState == GAME_STATE) {
 			drawGameState(g);
 		} else if (currentState == END_STATE) {
@@ -61,17 +64,20 @@ TheCat cat = new TheCat (100, 150, 80, 110);
 			CatImg = ImageIO.read(this.getClass().getResourceAsStream("cat.jpg"));
 			StartcatImg = ImageIO.read(this.getClass().getResourceAsStream("startcat.jpg"));
 			Explain2Img = ImageIO.read(this.getClass().getResourceAsStream("Explain2.jpg"));
-		//	DrawInstructionsImg = ImageIO.read(this.getClass().getResourceAsStream("drawInstructions.png"));
+			// DrawInstructionsImg =
+			// ImageIO.read(this.getClass().getResourceAsStream("drawInstructions.png"));
 			GameBackgroundImg = ImageIO.read(this.getClass().getResourceAsStream("game background.png"));
 			OnlyCatImg = ImageIO.read(this.getClass().getResourceAsStream("OnlyCat.Png"));
-			
+			StarImg = ImageIO.read(this.getClass().getResourceAsStream("Star.png"));
+			GhostImg = ImageIO.read(this.getClass().getResourceAsStream("Ghost.png"));
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		// cgo = new CatGameObject();
 		youlost = new Font("Ariel", Font.BOLD, 100);
-		score = new Font ("Ariel", Font.PLAIN, 75);
+		score = new Font("Ariel", Font.PLAIN, 75);
 		om.addObject(cat);
 	}
 
@@ -87,13 +93,14 @@ TheCat cat = new TheCat (100, 150, 80, 110);
 
 	}
 
-	//void updateDrawInstructionsState() {
+	// void updateDrawInstructionsState() {
 
-	//}
+	// }
 
 	void updateGameState() {
-cat.update();
-om.update();
+		cat.update();
+		om.update();
+		om.manageEnemies();
 	}
 
 	void updateEndState() {
@@ -112,14 +119,15 @@ om.update();
 		g.drawImage(Explain2Img, 0, 0, 800, 500, null);
 	}
 
-	/*void drawInstructionsState(Graphics g) {
-		g.drawImage(DrawInstructionsImg, 0, 0, 800, 500, null);
-	}*/
+	/*
+	 * void drawInstructionsState(Graphics g) { g.drawImage(DrawInstructionsImg,
+	 * 0, 0, 800, 500, null); }
+	 */
 
 	void drawGameState(Graphics g) {
-g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
-om.draw(g);
-//g.drawImage(OnlyCatImg, 100, 150, 80, 110, null);
+		g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
+		om.draw(g);
+		// g.drawImage(OnlyCatImg, 100, 150, 80, 110, null);
 
 	}
 
@@ -144,10 +152,11 @@ om.draw(g);
 			updateExplainState1();
 		} else if (currentState == EXPLAIN2_STATE) {
 			updateExplainState2();
-		} 
-		/*else if (currentState == DRAWINSTRUCTIONS_STATE) {
-			updateDrawInstructionsState();
-		} */ 
+		}
+		/*
+		 * else if (currentState == DRAWINSTRUCTIONS_STATE) {
+		 * updateDrawInstructionsState(); }
+		 */
 		else if (currentState == GAME_STATE) {
 			updateGameState();
 		} else if (currentState == END_STATE) {
@@ -176,22 +185,26 @@ om.draw(g);
 				currentState = MENU_STATE;
 			}
 		}
-	
-			if (e.getKeyCode() == KeyEvent.VK_UP) {
-				cat.up = true;
-				 System.out.println("up");
-			}
-			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				cat.down = true;
-			}
-			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				cat.left = true;
-				System.out.println("up");
-			}
-			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				cat.right = true;
-			}
-		
+
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			cat.up = true;
+			System.out.println("up");
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			cat.down = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			cat.left = true;
+			System.out.println("up");
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			cat.right = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			sf = new SpellFire(cat.x + 63, cat.y + 25, 20, 20);
+			om.addObject(sf);
+			sf.space = true;
+		}
 
 	}
 
@@ -199,10 +212,10 @@ om.draw(g);
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("This is keyReleased");
-		
+
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			cat.up = false;
-			 System.out.println("up");
+			System.out.println("up");
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			cat.down = false;
@@ -217,4 +230,3 @@ om.draw(g);
 	}
 
 }
-  

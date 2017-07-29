@@ -1,23 +1,27 @@
 import java.awt.Graphics;
 
-public class SpellFire {
+public class SpellFire extends CatGameObject {
 
 	int speed;
 	boolean space;
-	
-	SpellFire(int TGx, int TGy, int TGw, int TGh){
-		speed = 10;
+	/*
+	 * int SFx; int SFy; int SFw; int SFh;
+	 */
+
+	SpellFire(int SFx, int SFy, int SFw, int SFh) {
+		super(SFx, SFy, SFw, SFh);
+		speed = 7;
 
 	}
-	
-	void update(){
-		if(space){
-			
+
+	void update() {
+		if (space) {
+			x = x + speed;
 		}
 	}
-	
-	void draw(Graphics g){
-		
+
+	void draw(Graphics g) {
+		g.drawImage(CatGamePanel.StarImg, x, y, width, height, null);
 	}
-	
+
 }
