@@ -7,6 +7,7 @@ public class Ghosts extends CatGameObject {
 	}
 
 	void update() {
+		super.update();
 		x = x - 2;
 	}
 

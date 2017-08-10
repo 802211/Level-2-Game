@@ -15,6 +15,7 @@ public class SpellFire extends CatGameObject {
 	}
 
 	void update() {
+		super.update();
 		if (space) {
 			x = x + speed;
 		}

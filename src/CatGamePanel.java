@@ -16,9 +16,9 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	final int MENU_STATE = 0;
 	final int EXPLAIN1_STATE = 1;
 	final int EXPLAIN2_STATE = 2;
-	// final int DRAWINSTRUCTIONS_STATE = 3;
-	final int GAME_STATE = 3;
-	final int END_STATE = 4;
+	final int DRAWINSTRUCTIONS_STATE = 3;
+	final int GAME_STATE = 4;
+	final int END_STATE = 5;
 	int currentState = MENU_STATE;
 	public static BufferedImage CatImg;
 	public static BufferedImage StartcatImg;
@@ -29,8 +29,13 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	public static BufferedImage StarImg;
 	public static BufferedImage GhostImg;
 	Timer t;
+	Boolean lost = true;
+	String result;
 	Font youlost;
 	Font score;
+	Font instructions;
+	Font words;
+	Font small;
 	ObjectManager om = new ObjectManager();
 	TheCat cat = new TheCat(100, 150, 80, 110);
 	SpellFire sf;
@@ -45,10 +50,11 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		} else if (currentState == EXPLAIN2_STATE) {
 			drawExplainState2(g);
 		}
-		/*
-		 * else if (currentState == DRAWINSTRUCTIONS_STATE) {
-		 * drawInstructionsState(g); }
-		 */
+
+		else if (currentState == DRAWINSTRUCTIONS_STATE) {
+			drawInstructionsState(g);
+		}
+
 		else if (currentState == GAME_STATE) {
 			drawGameState(g);
 		} else if (currentState == END_STATE) {
@@ -78,7 +84,11 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		// cgo = new CatGameObject();
 		youlost = new Font("Ariel", Font.BOLD, 100);
 		score = new Font("Ariel", Font.PLAIN, 75);
+		instructions = new Font("Merienda", Font.BOLD, 80);
+		words = new Font("TimesNewRoman", Font.PLAIN, 50);
+		small = new Font("TimesNewRoman", Font.PLAIN, 40);
 		om.addObject(cat);
+
 	}
 
 	void updateMenuState() {
@@ -93,14 +103,29 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 
 	}
 
-	// void updateDrawInstructionsState() {
+	void updateDrawInstructionsState() {
 
-	// }
+	}
 
 	void updateGameState() {
+		if (om.getScore() >= 1) {
+			lost = false;
+			result = "YOU WON";
+		} else if (om.getScore() < 1) {
+			lost = true;
+			result = "YOU LOST";
+		}
 		cat.update();
 		om.update();
 		om.manageEnemies();
+		om.checkCollision();
+		if (cat.isAlive == false) {
+			currentState = END_STATE;
+			// om.getScore();
+			om.reset();
+			cat = new TheCat(100, 150, 80, 110);
+			om.addObject(this.cat = cat);
+		}
 	}
 
 	void updateEndState() {
@@ -119,10 +144,31 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		g.drawImage(Explain2Img, 0, 0, 800, 500, null);
 	}
 
-	/*
-	 * void drawInstructionsState(Graphics g) { g.drawImage(DrawInstructionsImg,
-	 * 0, 0, 800, 500, null); }
-	 */
+	void drawInstructionsState(Graphics g) {
+		g.setColor(Color.BLUE);
+		g.fillRect(0, 0, 800, 500);
+		g.setColor(Color.MAGENTA);
+		g.setFont(instructions);
+		g.drawString("Instructions", 133, 90);
+		g.setColor(Color.cyan);
+		g.setFont(words);
+		g.drawString("Press Space to Fire", 150, 150);
+		g.setColor(Color.ORANGE);
+		g.setFont(words);
+		g.drawString("Fire at the Ghosts", 175, 200);
+		g.setColor(Color.BLACK);
+		g.setFont(small);
+		g.drawString("Don't Let the Ghosts Touch the Cat", 70, 250);
+		g.setColor(Color.GREEN);
+		g.setFont(small);
+		g.drawString("Use the Arrow Keys to Move the Cat", 65, 300);
+		g.setColor(Color.yellow);
+		g.setFont(words);
+		g.drawString("Good Luck!", 200, 350);
+		g.setColor(Color.RED);
+		g.setFont(words);
+		g.drawString("Press ENTER to Play", 130, 400);
+	}
 
 	void drawGameState(Graphics g) {
 		g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
@@ -136,10 +182,10 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		g.fillRect(0, 0, 800, 500);
 		g.setColor(Color.BLACK);
 		g.setFont(youlost);
-		g.drawString("YOU LOST", 133, 100);
+		g.drawString(result, 133, 100);
 		g.setColor(Color.CYAN);
 		g.setFont(score);
-		g.drawString("Score = ", 150, 200);
+		g.drawString("Score = " + om.getScore(), 150, 200);
 	}
 
 	@Override

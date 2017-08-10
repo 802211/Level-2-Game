@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.Graphics;
 
 public class TheCat extends CatGameObject {
@@ -18,13 +17,14 @@ public class TheCat extends CatGameObject {
 	// TheCat cat = new TheCat();
 
 	void update() {
+		super.update();
 		if (up) {
 			y = y - speed;
 		}
 		if (y <= 0) {
 			y = 0;
 		}
-		if(x <= 0){
+		if (x <= 0) {
 			x = 0;
 		}
 		if (left) {
@@ -37,7 +37,7 @@ public class TheCat extends CatGameObject {
 		if (y >= 370) {
 			y = 370;
 		}
-		if(x >= 715){
+		if (x >= 715) {
 			x = 715;
 		}
 		if (right) {
