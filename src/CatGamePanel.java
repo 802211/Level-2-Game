@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -19,6 +20,8 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	final int DRAWINSTRUCTIONS_STATE = 3;
 	final int GAME_STATE = 4;
 	final int END_STATE = 5;
+	final int LEVEL2 = 6;
+	int endState = 5;
 	int currentState = MENU_STATE;
 	public static BufferedImage CatImg;
 	public static BufferedImage StartcatImg;
@@ -29,15 +32,19 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	public static BufferedImage StarImg;
 	public static BufferedImage GhostImg;
 	Timer t;
+	
 	Boolean lost = true;
+	Boolean level1passed = false;
 	String result;
 	Font youlost;
 	Font score;
 	Font instructions;
 	Font words;
 	Font small;
+	Font Level2;
+
 	ObjectManager om = new ObjectManager();
-	TheCat cat = new TheCat(100, 150, 80, 110);
+		TheCat cat = new TheCat(100, 150, 80, 110);
 	SpellFire sf;
 	// CatGameObject cgo;
 
@@ -59,6 +66,8 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 			drawGameState(g);
 		} else if (currentState == END_STATE) {
 			drawEndState(g);
+		} else if(currentState == LEVEL2) {
+			 drawLevel2(g);
 		}
 
 	}
@@ -88,7 +97,7 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		words = new Font("TimesNewRoman", Font.PLAIN, 50);
 		small = new Font("TimesNewRoman", Font.PLAIN, 40);
 		om.addObject(cat);
-
+		Level2 = new Font("Alconica", Font.BOLD, 150);
 	}
 
 	void updateMenuState() {
@@ -110,10 +119,15 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	void updateGameState() {
 		if (om.getScore() >= 1) {
 			lost = false;
+			level1passed = true;
+
 			result = "YOU WON";
+
 		} else if (om.getScore() < 1) {
 			lost = true;
+			level1passed = false;
 			result = "YOU LOST";
+		
 		}
 		cat.update();
 		om.update();
@@ -129,6 +143,10 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	}
 
 	void updateEndState() {
+
+	}
+
+	void updateLevel2() {
 
 	}
 
@@ -186,6 +204,16 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		g.setColor(Color.CYAN);
 		g.setFont(score);
 		g.drawString("Score = " + om.getScore(), 150, 200);
+	
+		
+	}
+
+	void drawLevel2(Graphics g) {
+		g.setColor(Color.RED);
+		g.fillRect(0, 0, 800, 500);
+		g.setColor(Color.GREEN);
+		g.setFont(Level2);
+		g.drawString("LEVEL 2", 100, 250);
 	}
 
 	@Override
@@ -208,7 +236,9 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		} else if (currentState == END_STATE) {
 			updateEndState();
 		}
-
+		else if(currentState == LEVEL2) {
+			updateLevel2();
+		}
 	}
 
 	void startGame() {
@@ -218,30 +248,30 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("This is keyTyped");
+		// System.out.println("This is keyTyped");
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("This is keyPressed");
+		// System.out.println("This is keyPressed");
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			currentState = currentState + 1;
-			if (currentState > END_STATE) {
+			if (currentState > LEVEL2) {
 				currentState = MENU_STATE;
 			}
 		}
 
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			cat.up = true;
-			System.out.println("up");
+			// System.out.println("up");
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			cat.down = true;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			cat.left = true;
-			System.out.println("up");
+			// System.out.println("up");
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			cat.right = true;
@@ -257,17 +287,18 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("This is keyReleased");
+		// System.out.println("This is keyReleased");
 
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			cat.up = false;
-			System.out.println("up");
+			// System.out.println("up");
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			cat.down = false;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			cat.left = false;
+			//
 			System.out.println("up");
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
