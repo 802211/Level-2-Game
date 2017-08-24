@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -18,9 +19,12 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	final int EXPLAIN1_STATE = 1;
 	final int EXPLAIN2_STATE = 2;
 	final int DRAWINSTRUCTIONS_STATE = 3;
-	final int GAME_STATE = 4;
-	final int END_STATE = 5;
-	final int LEVEL2 = 6;
+	final int WARNING_STATE = 4;
+	final int GAME_STATE = 5;	
+	final int END_STATE = 6;
+	int fire = 50;
+	boolean canfire = true;
+	//final int LEVEL2 = 6;
 	int endState = 5;
 	int currentState = MENU_STATE;
 	public static BufferedImage CatImg;
@@ -42,6 +46,7 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	Font words;
 	Font small;
 	Font Level2;
+	
 
 	ObjectManager om = new ObjectManager();
 		TheCat cat = new TheCat(100, 150, 80, 110);
@@ -61,14 +66,18 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		else if (currentState == DRAWINSTRUCTIONS_STATE) {
 			drawInstructionsState(g);
 		}
-
+		else if (currentState == WARNING_STATE) {
+			drawWarningState(g);
+		}
 		else if (currentState == GAME_STATE) {
 			drawGameState(g);
-		} else if (currentState == END_STATE) {
+		} 
+	
+		else if (currentState == END_STATE) {
 			drawEndState(g);
-		} else if(currentState == LEVEL2) {
-			 drawLevel2(g);
-		}
+		} //else if(currentState == LEVEL2) {
+			 //drawLevel2(g);
+		//}
 
 	}
 
@@ -116,18 +125,30 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 
 	}
 
+	void updateWarningState() {
+		
+	}
+	
 	void updateGameState() {
-		if (om.getScore() >= 1) {
+		if (om.getScore() >= 40) {
 			lost = false;
 			level1passed = true;
 
 			result = "YOU WON";
 
-		} else if (om.getScore() < 1) {
+		} 
+		else if (om.getScore() < 40) {
+			lost = true;
+			level1passed = false;
+			result = "YOU LOST";}
+			
+		 
+		
+	
+		else if(fire <= 0 && cat.isAlive == false) {
 			lost = true;
 			level1passed = false;
 			result = "YOU LOST";
-		
 		}
 		cat.update();
 		om.update();
@@ -138,9 +159,11 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 			// om.getScore();
 			om.reset();
 			cat = new TheCat(100, 150, 80, 110);
-			om.addObject(this.cat = cat);
+			om.addObject(cat);
 		}
 	}
+	
+	
 
 	void updateEndState() {
 
@@ -168,7 +191,7 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		g.setColor(Color.MAGENTA);
 		g.setFont(instructions);
 		g.drawString("Instructions", 133, 90);
-		g.setColor(Color.cyan);
+	/*	g.setColor(Color.cyan);
 		g.setFont(words);
 		g.drawString("Press Space to Fire", 150, 150);
 		g.setColor(Color.ORANGE);
@@ -184,10 +207,48 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		g.setFont(words);
 		g.drawString("Good Luck!", 200, 350);
 		g.setColor(Color.RED);
+		g.setColor(Color.black);
+		g.drawString("You can only fire 50 times.", x, y);
 		g.setFont(words);
 		g.drawString("Press ENTER to Play", 130, 400);
+		*/
+		g.setColor(Color.cyan);
+		g.setFont(small);
+		g.drawString("Press Space to Fire", 200, 150);
+		g.setColor(Color.ORANGE);
+		g.setFont(small);
+		g.drawString("Fire at the Ghosts", 205, 195);
+		g.setColor(Color.BLACK);
+		g.setFont(small);
+		g.drawString("Don't Let the Ghosts Touch the Cat", 60, 240);
+		g.setColor(Color.GREEN);
+		g.setFont(small);
+		g.drawString("Use the Arrow Keys to Move the Cat", 58, 285);
+		g.setColor(Color.yellow);
+		g.setFont(small);
+		g.drawString("Good Luck!", 300, 335);
+
+		g.setColor(Color.black);
+		g.setFont(small);
+		g.drawString("Press ENTER to Play", 200, 455);
 	}
 
+	void drawWarningState(Graphics g){
+		g.setColor(Color.BLACK);
+		g.setFont(instructions);
+		g.drawString("WARNINGS", 133, 90);
+		g.setColor(Color.RED);
+		g.setFont(words);
+		g.drawString("You can only fire 50 times.", 150, 100);
+		g.setFont(words);
+		g.drawString("Defeat 40 Ghosts to win.", 150, 200);
+		g.setFont(words);
+		g.drawString("You can only fire from the wand.", 130, 300);
+		g.setFont(words);
+		g.drawString("Avoid Ghosts too low to defeat.", 140, 400);
+		
+	}
+	
 	void drawGameState(Graphics g) {
 		g.drawImage(GameBackgroundImg, 0, 0, 800, 500, null);
 		om.draw(g);
@@ -208,13 +269,7 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		
 	}
 
-	void drawLevel2(Graphics g) {
-		g.setColor(Color.RED);
-		g.fillRect(0, 0, 800, 500);
-		g.setColor(Color.GREEN);
-		g.setFont(Level2);
-		g.drawString("LEVEL 2", 100, 250);
-	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -236,9 +291,9 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		} else if (currentState == END_STATE) {
 			updateEndState();
 		}
-		else if(currentState == LEVEL2) {
-			updateLevel2();
-		}
+		//else if(currentState == LEVEL2) {
+		//	updateLevel2();
+		//}
 	}
 
 	void startGame() {
@@ -257,8 +312,12 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		// System.out.println("This is keyPressed");
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			currentState = currentState + 1;
-			if (currentState > LEVEL2) {
+			if (currentState > END_STATE) {
 				currentState = MENU_STATE;
+					
+			}
+			if (currentState == GAME_STATE) {
+				om.setScore(0);
 			}
 		}
 
@@ -276,10 +335,17 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			cat.right = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+		if (e.getKeyCode() == KeyEvent.VK_SPACE && canfire == true) {
+			if(fire <= 0) {
+				canfire = false;
+				//JOptionPane.showMessageDialog(null, "You lost because you ran out of ammunition.");
+			return;
+			}
+			
 			sf = new SpellFire(cat.x + 63, cat.y + 25, 20, 20);
 			om.addObject(sf);
 			sf.space = true;
+			fire = fire - 1;
 		}
 
 	}
@@ -299,7 +365,7 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			cat.left = false;
 			//
-			System.out.println("up");
+			//System.out.println("up");
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			cat.right = false;

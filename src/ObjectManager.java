@@ -42,11 +42,13 @@ public class ObjectManager {
 			}
 		}
 	}
-
+//int quick = 0;
 	public void manageEnemies() {
 		if (System.currentTimeMillis() - enemyTimer >= enemySpawnTime) {
-			addObject(new Ghosts(800, new Random().nextInt(DrawingCat.HEIGHT - 100), 70, 100));
+			addObject(new Ghosts(800, new Random().nextInt(DrawingCat.HEIGHT), 70, 100));
 			enemyTimer = System.currentTimeMillis();
+			//quick = quick + 100;
+			enemySpawnTime = enemySpawnTime - 100;
 		}
 	}
 
@@ -57,8 +59,8 @@ public class ObjectManager {
 				CatGameObject o2 = objects.get(j);
 
 				if (o1.collisionBox.intersects(o2.collisionBox)) {
-					if ((o1 instanceof Ghosts && o2 instanceof SpellFire)
-							|| (o2 instanceof Ghosts && o1 instanceof SpellFire)) {
+					if ((o1 instanceof Ghosts && o2 instanceof SpellFire))
+							 {
 						score++;
 						System.out.println(score);
 						o1.isAlive = false;
@@ -67,6 +69,7 @@ public class ObjectManager {
 							|| (o2 instanceof Ghosts && o1 instanceof TheCat)) {
 						o1.isAlive = false;
 						o2.isAlive = false;
+					
 					}
 
 				}
@@ -84,5 +87,6 @@ public class ObjectManager {
 
 	public void reset() {
 		objects.clear();
+
 	}
 }
