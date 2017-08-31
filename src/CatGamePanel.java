@@ -130,14 +130,14 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 	}
 	
 	void updateGameState() {
-		if (om.getScore() >= 40) {
+		if (om.getScore() >= 50) {
 			lost = false;
 			level1passed = true;
 
 			result = "YOU WON";
 
 		} 
-		else if (om.getScore() < 40) {
+		else if (om.getScore() < 50) {
 			lost = true;
 			level1passed = false;
 			result = "YOU LOST";}
@@ -223,30 +223,37 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		g.drawString("Don't Let the Ghosts Touch the Cat", 60, 240);
 		g.setColor(Color.GREEN);
 		g.setFont(small);
-		g.drawString("Use the Arrow Keys to Move the Cat", 58, 285);
+		g.drawString("Use the Arrow Keys to Move the Cat", 58, 295);
 		g.setColor(Color.yellow);
 		g.setFont(small);
-		g.drawString("Good Luck!", 300, 335);
+		g.drawString("Good Luck! (press enter to continue)", 56, 350);
 
 		g.setColor(Color.black);
 		g.setFont(small);
-		g.drawString("Press ENTER to Play", 200, 455);
+		g.drawString("Bonus Points if you hit", 185, 415);
+		g.setColor(Color.black);
+		g.setFont(small);
+		g.drawString("TWO Ghosts with ONE spell", 135, 455);
 	}
 
 	void drawWarningState(Graphics g){
+		g.setColor(Color.YELLOW);
+		g.fillRect(0, 0, 800, 500);
 		g.setColor(Color.BLACK);
 		g.setFont(instructions);
-		g.drawString("WARNINGS", 133, 90);
+		g.drawString("WARNINGS", 150, 90);
 		g.setColor(Color.RED);
-		g.setFont(words);
-		g.drawString("You can only fire 50 times.", 150, 100);
-		g.setFont(words);
-		g.drawString("Defeat 40 Ghosts to win.", 150, 200);
-		g.setFont(words);
-		g.drawString("You can only fire from the wand.", 130, 300);
-		g.setFont(words);
-		g.drawString("Avoid Ghosts too low to defeat.", 140, 400);
-		
+		g.setFont(small);
+		g.drawString("You can only fire 50 times.", 130, 150);
+		g.setFont(small);
+		g.drawString("Defeat 50 Ghosts to win.", 150, 225);
+		g.setFont(small);
+		g.drawString("You can only fire from the wand.", 80, 300);
+		g.setFont(small);
+		g.drawString("Avoid Ghosts too low to defeat.", 90, 400);
+		g.setColor(Color.black);
+		g.setFont(small);
+		g.drawString("Press ENTER to Play", 200, 455);
 	}
 	
 	void drawGameState(Graphics g) {
@@ -314,7 +321,8 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 			currentState = currentState + 1;
 			if (currentState > END_STATE) {
 				currentState = MENU_STATE;
-					
+					canfire = true;
+					fire = 50;
 			}
 			if (currentState == GAME_STATE) {
 				om.setScore(0);
@@ -346,6 +354,7 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 			om.addObject(sf);
 			sf.space = true;
 			fire = fire - 1;
+			System.out.println(fire);
 		}
 
 	}
@@ -370,6 +379,12 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			cat.right = false;
 		}
+	
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			canfire = false;
+		}
+	
 	}
+	
 
 }
