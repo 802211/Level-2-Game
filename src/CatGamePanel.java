@@ -175,6 +175,15 @@ public class CatGamePanel extends JPanel implements ActionListener, KeyListener 
 
 	void drawMenuState(Graphics g) {
 		g.drawImage(StartcatImg, 0, 0, 800, 500, null);
+		g.setColor(Color.GREEN);
+		g.setFont(instructions);
+		g.drawString("Haunted Cat", 150, 100);
+		g.setColor(Color.GREEN);
+		g.setFont(instructions);
+		g.drawString("Wizard", 250, 200);
+		g.setColor(Color.blue);
+g.setFont(small);
+g.drawString("By: Chloe Luwa", 50, 450);
 	}
 
 	void drawExplainState1(Graphics g) {
